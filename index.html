@@ -134,6 +134,7 @@
 const firebaseConfig = {
     apiKey: "AIzaSyDh1JMuyTR0qhVsMJv_RE4rGxDh8vNDAAI",
     authDomain: "lomibooking-5f95b.firebaseapp.com",
+    databaseURL: "https://lomibooking-5f95b-default-rtdb.firebaseio.com",
     projectId: "lomibooking-5f95b",
     storageBucket: "lomibooking-5f95b.firebasestorage.app",
     messagingSenderId: "121811683518",
@@ -142,6 +143,16 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+  
+  /* ===== CALCULATE TOTAL ===== */
+function calculateTotal() {
+  const qty70 = parseInt(document.getElementById("qty70")?.value) || 0;
+  const qty73 = parseInt(document.getElementById("qty73")?.value) || 0;
+  const total = (qty70 * 25) + (qty73 * 35);
+  const totalEl = document.getElementById("totalAmount");
+  if(totalEl) totalEl.innerText = total;
+}
+
 
 /* ================= HOME ================= */
 function showHomepage() {
@@ -452,6 +463,7 @@ showHomepage();
 </script>
 </body>
 </html>
+
 
 
 
