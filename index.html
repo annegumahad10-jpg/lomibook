@@ -231,36 +231,31 @@ function submitOrder(){
 }
 
 /* ================= ADMIN LOGIN ================= */
-function showAdminLogin(){
-  document.getElementById("app").innerHTML = `
-    <div class="card">
-      <h2>Admin Login</h2>
-      <input type="email" id="adminEmail" placeholder="Email">
-      <input type="password" id="adminPassword" placeholder="Password">
-      <button onclick="adminLogin()">Login</button>
-      <button onclick="showHomepage()" class="secondary-btn">Back</button>
-      <div id="adminLoginResult"></div>
-    </div>
-  `;
-}
+function adminLogin() {
+  const email = document.getElementById("adminEmail").value.trim();
+  const password = document.getElementById("adminPassword").value.trim();
 
-function adminLogin(){
-  const email = adminEmail.value.trim();
-  const password = adminPassword.value.trim();
-  firebase.auth().signInWithEmailAndPassword(email,password)
-    .then(userCredential=>{
-      const user = userCredential.user;
-      db.ref("admins/"+user.uid).once("value").then(snapshot=>{
-        if(snapshot.exists()){
-          showAdminDashboard();
-        } else {
-          alert("Not authorized.");
-          firebase.auth().signOut();
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      // Use onAuthStateChanged to ensure auth is ready
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          // Check if UID exists in admins
+          db.ref("admins/" + user.uid).once("value").then(snapshot => {
+            if (snapshot.exists()) {
+              showAdminDashboard();  // ✅ Admin authorized
+            } else {
+              alert("Not authorized.");
+              firebase.auth().signOut();
+            }
+          });
         }
       });
     })
-    .catch(err=> alert(err.message));
+    .catch(err => alert(err.message));
 }
+
+
 
 /* ================= ADMIN DASHBOARD ================= */
 function showAdminDashboard(){
@@ -463,6 +458,7 @@ showHomepage();
 </script>
 </body>
 </html>
+
 
 
 
